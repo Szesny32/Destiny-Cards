@@ -822,7 +822,7 @@ Transform:
   m_GameObject: {fileID: 1017658747}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -862,11 +862,13 @@ MonoBehaviour:
   deepth: 5
   offset: {x: -2.25, y: -1.4, z: 0}
   flowOrigin: {x: 0, y: 0, z: 0}
-  amplitude: 0.05
+  amplitude: 0.075
   s: {x: 1.5, y: 1.5, z: 1.5}
   isSelected: 0
   growDelta: 4
-  decreaseDelta: 1.5
+  decreaseDelta: 1.25
+  unfollowSpeed: 5
+  isHolded: 0
 --- !u!4 &1090428656
 Transform:
   m_ObjectHideFlags: 0
@@ -987,8 +989,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115436763}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.25, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 10}
+  m_LocalPosition: {x: -10.25, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1264,8 +1266,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1256055178}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.25, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 10}
+  m_LocalPosition: {x: 10.25, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1305,11 +1307,13 @@ MonoBehaviour:
   deepth: 5
   offset: {x: 2.25, y: -1.4, z: 0}
   flowOrigin: {x: 0, y: 0, z: 0}
-  amplitude: 0.05
+  amplitude: 0.075
   s: {x: 1.5, y: 1.5, z: 1.5}
   isSelected: 0
   growDelta: 4
-  decreaseDelta: 1.5
+  decreaseDelta: 1.25
+  unfollowSpeed: 5
+  isHolded: 0
 --- !u!4 &1302320718
 Transform:
   m_ObjectHideFlags: 0
@@ -1376,6 +1380,8 @@ MonoBehaviour:
   rotSpeed: 8
   camera: {fileID: 963194227}
   cameraOffset: {x: 0, y: 10, z: -15}
+  followSpeed: 2
+  unfollowSpeed: 4
 --- !u!136 &1353768233
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1490,11 +1496,13 @@ MonoBehaviour:
   deepth: 5
   offset: {x: -0.75, y: -1.4, z: 0}
   flowOrigin: {x: 0, y: 0, z: 0}
-  amplitude: 0.05
+  amplitude: 0.075
   s: {x: 1.5, y: 1.5, z: 1.5}
   isSelected: 0
   growDelta: 4
-  decreaseDelta: 1.5
+  decreaseDelta: 1.25
+  unfollowSpeed: 5
+  isHolded: 0
 --- !u!4 &1442516574
 Transform:
   m_ObjectHideFlags: 0
@@ -1781,8 +1789,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1575757257}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 5.25}
-  m_LocalScale: {x: 10, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 10.25}
+  m_LocalScale: {x: 20, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1822,11 +1830,13 @@ MonoBehaviour:
   deepth: 5
   offset: {x: 0.75, y: -1.4, z: 0}
   flowOrigin: {x: 0, y: 0, z: 0}
-  amplitude: 0.05
+  amplitude: 0.075
   s: {x: 1.5, y: 1.5, z: 1.5}
   isSelected: 0
   growDelta: 4
-  decreaseDelta: 1.5
+  decreaseDelta: 1.25
+  unfollowSpeed: 5
+  isHolded: 0
 --- !u!4 &1851892960
 Transform:
   m_ObjectHideFlags: 0
@@ -2030,8 +2040,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2128611670}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5.25}
-  m_LocalScale: {x: 10, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: -10.25}
+  m_LocalScale: {x: 20, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

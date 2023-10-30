@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     public Vector3 cameraOffset = new Vector3(0f, 5f, -5f);
     private CardManager heldCard = null;
 
+    public float followSpeed = 2f;
+    public float unfollowSpeed = 5f;
+
     void Start()
     {
         MeshRenderer x = GetComponent<MeshRenderer>();
@@ -67,16 +70,23 @@ public class PlayerController : MonoBehaviour
             heldCard = null;  
         } else{
             RaycastHit hit;
-            //float z = 
-            //Debug.Log($"{hit.transform.name} :  {hit.transform.position} : {hit.point.z } : { heldCard.deepth} : {z}");
-            
 
-            float deepth = (Physics.Raycast(ray, out hit, rayDistance, ~LayerMask.GetMask("Cards"))) ? 
-                               (hit.point.z -1f) -  camera.transform.position.z  :  (camera.transform.forward * heldCard.deepth).z;
-           
-            Vector3 cardNewPos = Camera.main.ScreenToWorldPoint( new Vector3(mousePosition.x, mousePosition.y, deepth));
 
-            heldCard.transform.position = cardNewPos;
+            bool successHit = Physics.Raycast(ray, out hit, rayDistance, ~LayerMask.GetMask("Cards"));
+
+            if(successHit){
+                float deepth = (hit.point.z -1f) -  camera.transform.position.z;
+                Vector3 cardNewPos = Camera.main.ScreenToWorldPoint( new Vector3(mousePosition.x, mousePosition.y, deepth));
+                heldCard.transform.position = Vector3.Lerp(heldCard.transform.position, cardNewPos, followSpeed * Time.deltaTime);
+            } else {
+                 Vector3 cardNewPos =   camera.transform.position 
+                                        + camera.transform.forward * heldCard.deepth
+                                        + camera.transform.right * heldCard.offset.x
+                                        + camera.transform.up * heldCard.offset.y
+                                        + camera.transform.forward * heldCard.offset.z;
+                                        
+                heldCard.transform.position = Vector3.Slerp(heldCard.transform.position, cardNewPos, unfollowSpeed * Time.deltaTime);
+            }
         }
     }
 }
