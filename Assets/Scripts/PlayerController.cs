@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public Camera camera;
     public Vector3 cameraOffset = new Vector3(0f, 5f, -5f);
     private CardManager heldCard = null;
+    public Material outline;
 
     public float followSpeed = 2f;
     public float unfollowSpeed = 5f;
@@ -78,6 +79,28 @@ public class PlayerController : MonoBehaviour
                 float deepth = (hit.point.z -1f) -  camera.transform.position.z;
                 Vector3 cardNewPos = Camera.main.ScreenToWorldPoint( new Vector3(mousePosition.x, mousePosition.y, deepth));
                 heldCard.transform.position = Vector3.Lerp(heldCard.transform.position, cardNewPos, followSpeed * Time.deltaTime);
+
+                MeshRenderer targetRenderer = hit.collider.GetComponent<MeshRenderer>();
+                bool hasOutlineMaterial = false;
+                foreach (Material mat in targetRenderer.materials)
+                {
+                    if (mat.name == outline.name)
+                    {
+                        hasOutlineMaterial = true;
+                        break;
+                    }
+                }
+
+                if (hasOutlineMaterial == false){
+                    Material[] exisitingMaterials = targetRenderer.materials;
+                    Material[] updatedMaterials = new Material[exisitingMaterials.Length + 1];
+                    for (int i = 0; i < exisitingMaterials.Length; i++){
+                        updatedMaterials[i] = exisitingMaterials[i];
+                    }
+                    updatedMaterials[exisitingMaterials.Length] = outline;
+                    targetRenderer.materials = updatedMaterials;
+                }
+
             } else {
                  Vector3 cardNewPos =   camera.transform.position 
                                         + camera.transform.forward * heldCard.deepth
