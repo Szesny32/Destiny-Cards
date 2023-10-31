@@ -176,7 +176,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0999e18c11aa5074f9899cf0202adf5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -258,7 +258,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0999e18c11aa5074f9899cf0202adf5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -356,7 +356,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0999e18c11aa5074f9899cf0202adf5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -396,6 +396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -480,6 +481,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &794168695
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,7 +554,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0999e18c11aa5074f9899cf0202adf5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -859,15 +880,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 963194227}
-  deepth: 5
   offset: {x: -2.25, y: -1.4, z: 0}
   flowOrigin: {x: 0, y: 0, z: 0}
-  amplitude: 0.075
   s: {x: 1.5, y: 1.5, z: 1.5}
-  isSelected: 0
+  deepth: 5
+  amplitude: 0.075
   growDelta: 4
   decreaseDelta: 1.25
   unfollowSpeed: 5
+  isSelected: 0
   isHolded: 0
 --- !u!4 &1090428656
 Transform:
@@ -1146,7 +1167,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0999e18c11aa5074f9899cf0202adf5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1304,15 +1325,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 963194227}
-  deepth: 5
   offset: {x: 2.25, y: -1.4, z: 0}
   flowOrigin: {x: 0, y: 0, z: 0}
-  amplitude: 0.075
   s: {x: 1.5, y: 1.5, z: 1.5}
-  isSelected: 0
+  deepth: 5
+  amplitude: 0.075
   growDelta: 4
   decreaseDelta: 1.25
   unfollowSpeed: 5
+  isSelected: 0
   isHolded: 0
 --- !u!4 &1302320718
 Transform:
@@ -1380,6 +1401,7 @@ MonoBehaviour:
   rotSpeed: 8
   camera: {fileID: 963194227}
   cameraOffset: {x: 0, y: 10, z: -15}
+  outline: {fileID: 2100000, guid: f60cb568bdf7dea489183c591c8d2f67, type: 2}
   followSpeed: 2
   unfollowSpeed: 4
 --- !u!136 &1353768233
@@ -1493,15 +1515,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 963194227}
-  deepth: 5
   offset: {x: -0.75, y: -1.4, z: 0}
   flowOrigin: {x: 0, y: 0, z: 0}
-  amplitude: 0.075
   s: {x: 1.5, y: 1.5, z: 1.5}
-  isSelected: 0
+  deepth: 5
+  amplitude: 0.075
   growDelta: 4
   decreaseDelta: 1.25
   unfollowSpeed: 5
+  isSelected: 0
   isHolded: 0
 --- !u!4 &1442516574
 Transform:
@@ -1827,15 +1849,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 963194227}
-  deepth: 5
   offset: {x: 0.75, y: -1.4, z: 0}
   flowOrigin: {x: 0, y: 0, z: 0}
-  amplitude: 0.075
   s: {x: 1.5, y: 1.5, z: 1.5}
-  isSelected: 0
+  deepth: 5
+  amplitude: 0.075
   growDelta: 4
   decreaseDelta: 1.25
   unfollowSpeed: 5
+  isSelected: 0
   isHolded: 0
 --- !u!4 &1851892960
 Transform:

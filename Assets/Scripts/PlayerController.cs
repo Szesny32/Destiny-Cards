@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour
                 bool hasOutlineMaterial = false;
                 foreach (Material mat in targetRenderer.materials)
                 {
-                    if (mat.name == outline.name)
+                    if (mat.name == outline.name + " (Instance)")
                     {
                         hasOutlineMaterial = true;
                         break;
