@@ -55,6 +55,9 @@ public class PlayerHand : MonoBehaviour
     [SerializeField]
     private float _cursorFollowOffset = 1f;
 
+    [SerializeField]
+    private float _followAmplitudeBoost = 4f;
+
     private void Awake()
     {
         _camera = LevelManager.Instance.MainCamera;
@@ -128,6 +131,7 @@ public class PlayerHand : MonoBehaviour
     {
         foreach (CardInHand card in _cardsInHand)
         {
+            Vector3 flow = Flow(_amplitude, card.flowOffset);
             Transform spawnedTransform = card.SpawnedObject.transform;
             if (_activeCard.Card == card && _activeCard.CurrentState != ActiveCard.State.None)
             {
@@ -145,14 +149,18 @@ public class PlayerHand : MonoBehaviour
                     ));
 
                     RaycastHit targetObject = Target();
-                    spawnedTransform.localScale = Vector3.Lerp(spawnedTransform.localScale, ScaleByDeepth(targetObject), _scaleFactor * Time.deltaTime);
+                    Vector3 newScale = ScaleByDeepth(targetObject);
+                    spawnedTransform.localScale = Vector3.Lerp(spawnedTransform.localScale, newScale, _scaleFactor * Time.deltaTime);
 
                     Vector3 localMousePos = transform.InverseTransformPoint(worldMousePos);
+
+                    
                     spawnedTransform.localPosition = new Vector3(
-                        localMousePos.x + _cursorFollowOffset,
-                        localMousePos.y,
+                        localMousePos.x + _cursorFollowOffset + _followAmplitudeBoost*flow.x,
+                        localMousePos.y + _followAmplitudeBoost*flow.z,
                         spawnedTransform.localPosition.z
                     );
+
 
                     spawnedTransform.localEulerAngles = new Vector3(
                         0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, 0.0f, _lerpTime));
@@ -161,7 +169,7 @@ public class PlayerHand : MonoBehaviour
             else
             {
                 spawnedTransform.localPosition = Vector3.Slerp(
-                    spawnedTransform.localPosition, card.BasePosition + Flow(_amplitude, card.flowOffset), _lerpTime);
+                    spawnedTransform.localPosition, card.BasePosition + flow, _lerpTime);
 
                 spawnedTransform.localEulerAngles = new Vector3(
                     0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, card.BaseRotation, _lerpTime));
