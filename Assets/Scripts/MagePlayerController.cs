@@ -10,9 +10,13 @@ public class MagePlayerController : MonoBehaviour
     [SerializeField]
     private float _movementSpeed;
 
+    [SerializeField]
+    private float _rotationSpeed;
+
     private Camera _camera;
     private Rigidbody _rigidbody;
     private Animator _animator;
+
 
     private void Awake()
     {
@@ -27,7 +31,7 @@ public class MagePlayerController : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         SetRotationBasedOnInput(horizontalInput, verticalInput);
 
-        var movement = new Vector3(horizontalInput, 0.0f, verticalInput);
+        var movement = new Vector3(horizontalInput, 0.0f, verticalInput).normalized;
         _rigidbody.velocity = new Vector3(
             movement.x * _movementSpeed,
             _rigidbody.velocity.y,
@@ -78,6 +82,6 @@ public class MagePlayerController : MonoBehaviour
             angleY = 135.0f;
         }
 
-        transform.eulerAngles = new Vector3(0.0f, angleY, 0.0f);
+        transform.eulerAngles =  new Vector3(0.0f, Mathf.LerpAngle(transform.eulerAngles.y, angleY, _rotationSpeed *Time.deltaTime), 0.0f);
     }
 }
