@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2691244775580806257}
   - component: {fileID: 3206406278966807319}
   - component: {fileID: 6022812394622357713}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 2404300721028607463}
   - component: {fileID: 5164043800723360215}
   - component: {fileID: 3884486262963059683}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3157003676637546315}
   - component: {fileID: 290740872}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Card_Fireball
   m_TagString: Card
   m_Icon: {fileID: 0}

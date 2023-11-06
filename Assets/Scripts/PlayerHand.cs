@@ -38,10 +38,22 @@ public class PlayerHand : MonoBehaviour
     private float _lerpTime = 0.1f;
 
     [SerializeField]
-    private float amplitude = 0.04f;
+    private float _amplitude = 0.04f;
     
     [SerializeField]
     private float cardOffset = 1.125f;
+
+    [SerializeField]
+    private float _minScale = 0.25f;
+
+    [SerializeField]
+    private float _maxScale = 0.75f;
+
+    [SerializeField]
+    private float _scaleFactor = 2f;
+    
+    [SerializeField]
+    private float _cursorFollowOffset = 1f;
 
     private void Awake()
     {
@@ -132,9 +144,12 @@ public class PlayerHand : MonoBehaviour
                         5.0f
                     ));
 
+                    RaycastHit targetObject = Target();
+                    spawnedTransform.localScale = Vector3.Lerp(spawnedTransform.localScale, ScaleByDeepth(targetObject), _scaleFactor * Time.deltaTime);
+
                     Vector3 localMousePos = transform.InverseTransformPoint(worldMousePos);
                     spawnedTransform.localPosition = new Vector3(
-                        localMousePos.x,
+                        localMousePos.x + _cursorFollowOffset,
                         localMousePos.y,
                         spawnedTransform.localPosition.z
                     );
@@ -145,16 +160,13 @@ public class PlayerHand : MonoBehaviour
             }
             else
             {
-                Vector3 flow =  new Vector3(
-                                            amplitude *(Mathf.Sin(Time.time + card.flowOffset.x) - 1f), 
-                                            amplitude *(Mathf.Sin(Time.time + card.flowOffset.y) - 1f),
-                                            amplitude *(Mathf.Sin(Time.time + card.flowOffset.z) - 1f));
-
                 spawnedTransform.localPosition = Vector3.Slerp(
-                    spawnedTransform.localPosition, card.BasePosition + flow, _lerpTime);
+                    spawnedTransform.localPosition, card.BasePosition + Flow(_amplitude, card.flowOffset), _lerpTime);
 
                 spawnedTransform.localEulerAngles = new Vector3(
                     0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, card.BaseRotation, _lerpTime));
+
+                spawnedTransform.localScale = Vector3.one;
             }
         }
     }
@@ -175,4 +187,28 @@ public class PlayerHand : MonoBehaviour
             rotZ -= 3.0f;
         }
     }
+
+    private Vector3 Flow(float amplitude, Vector3 offset){
+       return amplitude * new Vector3(
+            Mathf.Sin(Time.time + offset.x) - 1f, 
+            Mathf.Sin(Time.time + offset.y) - 1f,
+            Mathf.Sin(Time.time + offset.z) - 1f);
+    }
+
+    private RaycastHit Target(){
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        float rayDistance = 100f; 
+    
+        RaycastHit hit;
+        bool successHit = Physics.Raycast(ray, out hit, rayDistance, ~LayerMask.GetMask("Cards"));
+        Debug.DrawRay(ray.origin, ray.direction * rayDistance, successHit? Color.green : Color.red);
+        return hit;
+    }
+
+    private Vector3 ScaleByDeepth(RaycastHit targetObject){
+        float deepth = targetObject.collider != null ?  ((targetObject.point.z -1f) -  _camera.transform.position.z) : 1f;
+        float scaleValue = Mathf.Clamp(1f / deepth, _minScale, _maxScale);
+        return new Vector3(scaleValue, scaleValue, scaleValue);
+    }
+
 }

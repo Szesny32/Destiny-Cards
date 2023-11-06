@@ -946,9 +946,9 @@ GameObject:
   m_Component:
   - component: {fileID: 337165411}
   - component: {fileID: 337165412}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PlayerHand
-  m_TagString: Untagged
+  m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -983,6 +983,10 @@ MonoBehaviour:
   _lerpTime: 0.06
   amplitude: 0.04
   cardOffset: 1.125
+  _minScale: 0.25
+  _maxScale: 1
+  _scaleFactor: 4
+  _cursorFollowOffset: 0.25
 --- !u!1001 &338496793
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5001,7 +5005,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cameraOffset: {x: 0, y: 16, z: -15}
   _movementSpeed: 8
-  _rotationSpeed: 2
+  _rotationSpeed: 5
 --- !u!136 &919132147568262805
 CapsuleCollider:
   m_ObjectHideFlags: 0
