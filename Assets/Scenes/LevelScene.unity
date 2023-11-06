@@ -987,6 +987,8 @@ MonoBehaviour:
   _maxScale: 1
   _scaleFactor: 2
   _cursorFollowOffset: 0.25
+  _followAmplitudeBoost: 4
+  _outline: {fileID: 2100000, guid: f60cb568bdf7dea489183c591c8d2f67, type: 2}
 --- !u!1001 &338496793
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1041,6 +1043,10 @@ PrefabInstance:
     - target: {fileID: 2201485472440039830, guid: 90e6fd4955b483248ba46adde1d47f9e, type: 3}
       propertyPath: m_Name
       value: BookcaseFilled (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2201485472440039830, guid: 90e6fd4955b483248ba46adde1d47f9e, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90e6fd4955b483248ba46adde1d47f9e, type: 3}
@@ -4909,6 +4915,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChestGold
       objectReference: {fileID: 0}
+    - target: {fileID: 572306351329167192, guid: 0699ab7ec74f0814a821aacac5c6e17e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 572306352296131731, guid: 0699ab7ec74f0814a821aacac5c6e17e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 917306284923723234, guid: 0699ab7ec74f0814a821aacac5c6e17e, type: 3}
       propertyPath: m_RootOrder
       value: 65
@@ -5424,6 +5438,14 @@ PrefabInstance:
     - target: {fileID: 3318829057968352019, guid: 5115121ccef3d0644acfe42fbeadafa5, type: 3}
       propertyPath: m_Name
       value: Chest
+      objectReference: {fileID: 0}
+    - target: {fileID: 3318829057968352019, guid: 5115121ccef3d0644acfe42fbeadafa5, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5448396232593343664, guid: 5115121ccef3d0644acfe42fbeadafa5, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5115121ccef3d0644acfe42fbeadafa5, type: 3}
@@ -6449,6 +6471,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TorchWall
       objectReference: {fileID: 0}
+    - target: {fileID: 4601815268686589776, guid: 9cf55902e92332a44b2ddbe7ff99a406, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cf55902e92332a44b2ddbe7ff99a406, type: 3}
 --- !u!4 &4523572022929096999
@@ -6756,6 +6782,10 @@ PrefabInstance:
     - target: {fileID: 8343712107754779850, guid: c2067ad2dc7550e43a3aa219b97b9db2, type: 3}
       propertyPath: m_Name
       value: Pots
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343712107754779850, guid: c2067ad2dc7550e43a3aa219b97b9db2, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8683223034425323120, guid: c2067ad2dc7550e43a3aa219b97b9db2, type: 3}
       propertyPath: m_RootOrder
@@ -7545,6 +7575,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door
       objectReference: {fileID: 0}
+    - target: {fileID: 3777751745729561443, guid: 5cb0a844df4ac434cab7c208294f5223, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4550488979868408281, guid: 5cb0a844df4ac434cab7c208294f5223, type: 3}
       propertyPath: m_RootOrder
       value: 57
@@ -7774,9 +7808,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 718361775}
     m_Modifications:
+    - target: {fileID: 1724973001219672503, guid: f95912f81ae881943944bcfa53a65f36, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2306636104213124230, guid: f95912f81ae881943944bcfa53a65f36, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4744176533499779124, guid: f95912f81ae881943944bcfa53a65f36, type: 3}
       propertyPath: m_Name
       value: TableWithPotions
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744176533499779124, guid: f95912f81ae881943944bcfa53a65f36, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5376563238585483918, guid: f95912f81ae881943944bcfa53a65f36, type: 3}
       propertyPath: m_RootOrder
@@ -8109,6 +8155,10 @@ PrefabInstance:
     - target: {fileID: 3905063351388782280, guid: 69413bf4064570a408ee3261ef48d994, type: 3}
       propertyPath: m_Name
       value: TableMedium
+      objectReference: {fileID: 0}
+    - target: {fileID: 3905063351388782280, guid: 69413bf4064570a408ee3261ef48d994, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4429926580275176562, guid: 69413bf4064570a408ee3261ef48d994, type: 3}
       propertyPath: m_RootOrder

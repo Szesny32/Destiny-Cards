@@ -58,6 +58,9 @@ public class PlayerHand : MonoBehaviour
     [SerializeField]
     private float _followAmplitudeBoost = 4f;
 
+    [SerializeField]
+    private Material _outline;
+
     private void Awake()
     {
         _camera = LevelManager.Instance.MainCamera;
@@ -149,6 +152,9 @@ public class PlayerHand : MonoBehaviour
                     ));
 
                     RaycastHit targetObject = Target();
+                    if(targetObject.collider!=null){
+                        highlightTarget(targetObject.collider.gameObject);
+                    }
                     Vector3 newScale = ScaleByDeepth(targetObject);
                     spawnedTransform.localScale = Vector3.Lerp(spawnedTransform.localScale, newScale, _scaleFactor * Time.deltaTime);
 
@@ -156,8 +162,8 @@ public class PlayerHand : MonoBehaviour
 
                     
                     spawnedTransform.localPosition = new Vector3(
-                        localMousePos.x + _cursorFollowOffset + _followAmplitudeBoost*flow.x,
-                        localMousePos.y + _followAmplitudeBoost*flow.z,
+                        localMousePos.x + _cursorFollowOffset,
+                        localMousePos.y,
                         spawnedTransform.localPosition.z
                     );
 
@@ -210,6 +216,7 @@ public class PlayerHand : MonoBehaviour
         RaycastHit hit;
         bool successHit = Physics.Raycast(ray, out hit, rayDistance, ~LayerMask.GetMask("Cards"));
         Debug.DrawRay(ray.origin, ray.direction * rayDistance, successHit? Color.green : Color.red);
+        
         return hit;
     }
 
@@ -218,5 +225,31 @@ public class PlayerHand : MonoBehaviour
         float scaleValue = Mathf.Clamp(1f / deepth, _minScale, _maxScale);
         return new Vector3(scaleValue, scaleValue, scaleValue);
     }
+
+    private void highlightTarget(GameObject target){
+        if(target.layer == LayerMask.NameToLayer("MagicSubmissive")){
+            MeshRenderer targetRenderer = target.GetComponent<MeshRenderer>();
+            bool hasOutlineMaterial = false;
+            foreach (Material mat in targetRenderer.materials)
+            {
+                if (mat.name == _outline.name + " (Instance)")
+                {
+                    hasOutlineMaterial = true;
+                    break;
+                }
+            }
+
+            if (hasOutlineMaterial == false){
+                Material[] exisitingMaterials = targetRenderer.materials;
+                Material[] updatedMaterials = new Material[exisitingMaterials.Length + 1];
+                for (int i = 0; i < exisitingMaterials.Length; i++){
+                    updatedMaterials[i] = exisitingMaterials[i];
+                }
+                updatedMaterials[exisitingMaterials.Length] = _outline;
+                targetRenderer.materials = updatedMaterials;
+            }            
+        }  
+    }
+
 
 }
