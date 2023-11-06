@@ -981,6 +981,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lerpTime: 0.06
+  amplitude: 0.04
+  cardOffset: 1.125
 --- !u!1001 &338496793
 PrefabInstance:
   m_ObjectHideFlags: 0

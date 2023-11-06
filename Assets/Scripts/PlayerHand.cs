@@ -9,6 +9,7 @@ public class CardInHand
     public CardDescriptor CardDescriptor;
     public GameObject SpawnedObject;
     public Vector3 BasePosition;
+    public Vector3 flowOffset;
     public float BaseRotation;
 }
 
@@ -35,6 +36,12 @@ public class PlayerHand : MonoBehaviour
 
     [SerializeField]
     private float _lerpTime = 0.1f;
+
+    [SerializeField]
+    private float amplitude = 0.04f;
+    
+    [SerializeField]
+    private float cardOffset = 1.125f;
 
     private void Awake()
     {
@@ -68,6 +75,12 @@ public class PlayerHand : MonoBehaviour
 
         cardInHand.CardDescriptor = card;
         cardInHand.SpawnedObject = spawnedObject;
+
+        cardInHand.flowOffset = new Vector3(  
+            Random.Range(0f, 360f) * Mathf.Deg2Rad,
+            Random.Range(0f, 360f) * Mathf.Deg2Rad,
+            Random.Range(0f, 360f) * Mathf.Deg2Rad
+        );
 
         _cardsInHand.Add(cardInHand);
         UpdateCardsLayout();
@@ -132,8 +145,14 @@ public class PlayerHand : MonoBehaviour
             }
             else
             {
+                Vector3 flow =  new Vector3(
+                                            amplitude *(Mathf.Sin(Time.time + card.flowOffset.x) - 1f), 
+                                            amplitude *(Mathf.Sin(Time.time + card.flowOffset.y) - 1f),
+                                            amplitude *(Mathf.Sin(Time.time + card.flowOffset.z) - 1f));
+
                 spawnedTransform.localPosition = Vector3.Slerp(
-                    spawnedTransform.localPosition, card.BasePosition, _lerpTime);
+                    spawnedTransform.localPosition, card.BasePosition + flow, _lerpTime);
+
                 spawnedTransform.localEulerAngles = new Vector3(
                     0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, card.BaseRotation, _lerpTime));
             }
@@ -142,7 +161,7 @@ public class PlayerHand : MonoBehaviour
 
     private void UpdateCardsLayout()
     {
-        float startPosX = -0.5f * (_cardsInHand.Count - 1);
+        float startPosX = -0.5f *cardOffset* (_cardsInHand.Count - 1);
         float posX = startPosX;
         float rotZ = 1.5f * (_cardsInHand.Count - 1);
         for (int i = 0; i < _cardsInHand.Count; i++)
@@ -152,7 +171,7 @@ public class PlayerHand : MonoBehaviour
             card.BasePosition = new Vector3(posX, posY, 0);
             card.BaseRotation = rotZ;
             card.SpawnedObject.name = i.ToString();
-            posX += 1.0f;
+            posX += cardOffset;
             rotZ -= 3.0f;
         }
     }
