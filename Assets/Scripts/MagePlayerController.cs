@@ -82,6 +82,6 @@ public class MagePlayerController : MonoBehaviour
             angleY = 135.0f;
         }
 
-        transform.eulerAngles =  new Vector3(0.0f, Mathf.LerpAngle(transform.eulerAngles.y, angleY, _rotationSpeed *Time.deltaTime), 0.0f);
+        transform.eulerAngles =  new Vector3(0.0f, Mathf.LerpAngle(transform.eulerAngles.y, angleY, _rotationSpeed), 0.0f);
     }
 }

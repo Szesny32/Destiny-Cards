@@ -10,7 +10,12 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private Camera _mainCamera;
 
+    [SerializeField]
+    private GameObject _player;
+
     public Camera MainCamera => _mainCamera;
+
+    public GameObject Player => _player;
 
     private void Awake()
     {

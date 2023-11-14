@@ -65,12 +65,12 @@ public class PlayerHand : MonoBehaviour
     {
         _camera = LevelManager.Instance.MainCamera;
 
-        var fireballCard = GameManager.Instance.GetCardDescriptor("card_fireball");
-        AddCard(fireballCard);
-        AddCard(fireballCard);
-        AddCard(fireballCard);
-        AddCard(fireballCard);
-        AddCard(fireballCard);
+        var pullCard = GameManager.Instance.GetCardDescriptor("card_pull");
+        AddCard(pullCard);
+        AddCard(pullCard);
+        AddCard(pullCard);
+        AddCard(pullCard);
+        AddCard(pullCard);
     }
 
     private void Update()
@@ -109,6 +109,19 @@ public class PlayerHand : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && _activeCard.CurrentState == ActiveCard.State.CursorFollow)
         {
             _activeCard.CurrentState = ActiveCard.State.None;
+            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, 100.0f))
+            {
+                if (hit.transform.TryGetComponent<InteractiveObject>(out var interactiveObject))
+                {
+                    var cardDesc = _activeCard.Card.CardDescriptor;
+                    var effectObject = Instantiate(cardDesc.EffectPrefab);
+                    effectObject.transform.position = hit.transform.position;
+                    Destroy(effectObject, effectObject.GetComponent<ParticleSystem>().main.duration);
+
+                    cardDesc.CardEffectHandler.Handle(hit.transform.gameObject, interactiveObject.Type);
+                }
+            }
         }
         else if (_activeCard.CurrentState != ActiveCard.State.CursorFollow)
         {
