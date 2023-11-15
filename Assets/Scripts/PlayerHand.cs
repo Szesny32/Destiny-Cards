@@ -56,21 +56,23 @@ public class PlayerHand : MonoBehaviour
     private float _cursorFollowOffset = 1f;
 
     [SerializeField]
-    private float _followAmplitudeBoost = 4f;
-
-    [SerializeField]
     private Material _outline;
+
+    private MagePlayerController _playerController;
 
     private void Awake()
     {
+        _playerController = LevelManager.Instance.Player.GetComponent<MagePlayerController>();
         _camera = LevelManager.Instance.MainCamera;
 
         var pullCard = GameManager.Instance.GetCardDescriptor("card_pull");
         AddCard(pullCard);
         AddCard(pullCard);
         AddCard(pullCard);
-        AddCard(pullCard);
-        AddCard(pullCard);
+
+        var fireballCard = GameManager.Instance.GetCardDescriptor("card_fireball");
+        AddCard(fireballCard);
+        AddCard(fireballCard);
     }
 
     private void Update()
@@ -119,6 +121,8 @@ public class PlayerHand : MonoBehaviour
                     effectObject.transform.position = hit.transform.position;
                     Destroy(effectObject, effectObject.GetComponent<ParticleSystem>().main.duration);
 
+                    _playerController.Spellcast(hit.transform);
+
                     cardDesc.CardEffectHandler.Handle(hit.transform.gameObject, interactiveObject.Type);
                 }
             }
@@ -161,14 +165,15 @@ public class PlayerHand : MonoBehaviour
                     Vector3 worldMousePos = _camera.ScreenToWorldPoint(new Vector3(
                         Input.mousePosition.x,
                         Input.mousePosition.y,
-                        5.0f
+                        4.0f
                     ));
 
                     RaycastHit targetObject = Target();
-                    if(targetObject.collider!=null){
-                        highlightTarget(targetObject.collider.gameObject);
+                    if (targetObject.collider != null)
+                    {
+                        HighlightTarget(targetObject.collider.gameObject);
                     }
-                    Vector3 newScale = ScaleByDeepth(targetObject);
+                    Vector3 newScale = ScaleByDepth(targetObject);
                     spawnedTransform.localScale = Vector3.Lerp(spawnedTransform.localScale, newScale, _scaleFactor * Time.deltaTime);
 
                     Vector3 localMousePos = transform.InverseTransformPoint(worldMousePos);
@@ -193,7 +198,7 @@ public class PlayerHand : MonoBehaviour
                 spawnedTransform.localEulerAngles = new Vector3(
                     0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, card.BaseRotation, _lerpTime));
 
-                spawnedTransform.localScale = Vector3.one;
+                spawnedTransform.localScale = new Vector3(1.0f, 0.8f, 0.4f);
             }
         }
     }
@@ -222,10 +227,11 @@ public class PlayerHand : MonoBehaviour
             Mathf.Sin(Time.time + offset.z) - 1f);
     }
 
-    private RaycastHit Target(){
+    private RaycastHit Target()
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        float rayDistance = 100f; 
-    
+        float rayDistance = 100f;
+
         RaycastHit hit;
         bool successHit = Physics.Raycast(ray, out hit, rayDistance, ~LayerMask.GetMask("Cards"));
         Debug.DrawRay(ray.origin, ray.direction * rayDistance, successHit? Color.green : Color.red);
@@ -233,14 +239,17 @@ public class PlayerHand : MonoBehaviour
         return hit;
     }
 
-    private Vector3 ScaleByDeepth(RaycastHit targetObject){
-        float deepth = targetObject.collider != null ?  ((targetObject.point.z -1f) -  _camera.transform.position.z) : 1f;
-        float scaleValue = Mathf.Clamp(1f / deepth, _minScale, _maxScale);
+    private Vector3 ScaleByDepth(RaycastHit targetObject)
+    {
+        float depth = targetObject.collider != null ?  ((targetObject.point.z - 1f) -  _camera.transform.position.z) : 1f;
+        float scaleValue = Mathf.Clamp(1f / depth, _minScale, _maxScale);
         return new Vector3(scaleValue, scaleValue, scaleValue);
     }
 
-    private void highlightTarget(GameObject target){
-        if(target.layer == LayerMask.NameToLayer("MagicSubmissive")){
+    private void HighlightTarget(GameObject target)
+    {
+        if(target.layer == LayerMask.NameToLayer("MagicSubmissive"))
+        {
             MeshRenderer targetRenderer = target.GetComponent<MeshRenderer>();
             bool hasOutlineMaterial = false;
             foreach (Material mat in targetRenderer.materials)
@@ -252,10 +261,12 @@ public class PlayerHand : MonoBehaviour
                 }
             }
 
-            if (hasOutlineMaterial == false){
+            if (!hasOutlineMaterial)
+            {
                 Material[] exisitingMaterials = targetRenderer.materials;
                 Material[] updatedMaterials = new Material[exisitingMaterials.Length + 1];
-                for (int i = 0; i < exisitingMaterials.Length; i++){
+                for (int i = 0; i < exisitingMaterials.Length; i++)
+                {
                     updatedMaterials[i] = exisitingMaterials[i];
                 }
                 updatedMaterials[exisitingMaterials.Length] = _outline;

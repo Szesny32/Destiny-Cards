@@ -14,17 +14,32 @@ public class CardDescriptor
     public ICardEffectHandler CardEffectHandler;
 }
 
+[System.Serializable]
+public class PrefabDescriptor
+{
+    public string Id;
+    public GameObject Prefab;
+}
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [SerializeField]
+    private PrefabDescriptor[] _prefabs;
+
+    private readonly Dictionary<string, GameObject> _prefabsMap = new();
     private readonly Dictionary<string, CardDescriptor> _cardDescriptorsMap = new();
 
     private void Awake()
     {
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        foreach (PrefabDescriptor prefab in _prefabs)
+        {
+            _prefabsMap[prefab.Id] = prefab.Prefab;
+        }
         PrepareCardDescriptors();
     }
 
@@ -34,8 +49,8 @@ public class GameManager : MonoBehaviour
         {
             Id = "card_pull",
             Name = "Pull",
-            Prefab = PrefabUtility.LoadPrefabContents("Assets/Prefabs/Cards/Card_Fireball.prefab"),
-            EffectPrefab = PrefabUtility.LoadPrefabContents("Assets/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Green hit.prefab"),
+            Prefab = GetPrefab("card_pull"),
+            EffectPrefab = GetPrefab("effect_greenhit"),
             CardEffectHandler = new PullEffectHandler()
         };
 
@@ -43,8 +58,8 @@ public class GameManager : MonoBehaviour
         {
             Id = "card_fireball",
             Name = "Fireball",
-            Prefab = PrefabUtility.LoadPrefabContents("Assets/Prefabs/Cards/Card_Fireball.prefab"),
-            EffectPrefab = PrefabUtility.LoadPrefabContents("Assets/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Holy hit.prefab"),
+            Prefab = GetPrefab("card_fireball"),
+            EffectPrefab = GetPrefab("effect_holyhit"),
             CardEffectHandler = new FireballEffectHandler()
         };
     }
@@ -52,5 +67,10 @@ public class GameManager : MonoBehaviour
     public CardDescriptor GetCardDescriptor(string id)
     {
         return _cardDescriptorsMap.TryGetValue(id, out CardDescriptor value) ? value : null;
+    }
+
+    public GameObject GetPrefab(string id)
+    {
+        return _prefabsMap.TryGetValue(id, out GameObject value) ? value : null;
     }
 }
