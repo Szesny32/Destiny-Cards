@@ -60,8 +60,7 @@ public class PlayerHand : MonoBehaviour
 
     private MagePlayerController _playerController;
 
-    private void Awake()
-    {
+    private void Awake(){
         _playerController = LevelManager.Instance.Player.GetComponent<MagePlayerController>();
         _camera = LevelManager.Instance.MainCamera;
 
@@ -75,8 +74,7 @@ public class PlayerHand : MonoBehaviour
         AddCard(fireballCard);
     }
 
-    private void Update()
-    {
+    private void Update(){
         if (Input.GetKeyDown(KeyCode.T))
         {
             var fireballCard = GameManager.Instance.GetCardDescriptor("card_fireball");
@@ -87,8 +85,7 @@ public class PlayerHand : MonoBehaviour
         ApplyCardStateOnTransform();
     }
 
-    public void AddCard(CardDescriptor card)
-    {
+    public void AddCard(CardDescriptor card){
         var cardInHand = new CardInHand();
         GameObject spawnedObject = Instantiate(card.Prefab, transform);
         spawnedObject.transform.localPosition = Vector3.zero;
@@ -106,105 +103,7 @@ public class PlayerHand : MonoBehaviour
         UpdateCardsLayout();
     }
 
-    private void UpdateCardState()
-    {
-        if (Input.GetMouseButtonUp(0) && _activeCard.CurrentState == ActiveCard.State.CursorFollow)
-        {
-            _activeCard.CurrentState = ActiveCard.State.None;
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100.0f))
-            {
-                if (hit.transform.TryGetComponent<InteractiveObject>(out var interactiveObject))
-                {
-                    var cardDesc = _activeCard.Card.CardDescriptor;
-                    var effectObject = Instantiate(cardDesc.EffectPrefab);
-                    effectObject.transform.position = hit.transform.position;
-                    Destroy(effectObject, effectObject.GetComponent<ParticleSystem>().main.duration);
-
-                    _playerController.Spellcast(hit.transform);
-
-                    cardDesc.CardEffectHandler.Handle(hit.transform.gameObject, interactiveObject.Type);
-                }
-            }
-        }
-        else if (_activeCard.CurrentState != ActiveCard.State.CursorFollow)
-        {
-            _activeCard.Card = null;
-            _activeCard.CurrentState = ActiveCard.State.None;
-
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100.0f))
-            {
-                if (hit.collider.gameObject.CompareTag("Card"))
-                {
-                    int cardIndex = int.Parse(hit.collider.gameObject.name);
-                    _activeCard.Card = _cardsInHand[cardIndex];
-                    _activeCard.CurrentState = Input.GetMouseButtonDown(0) ?
-                        ActiveCard.State.CursorFollow :
-                        ActiveCard.State.CursorHover;
-                }
-            }
-        }
-    }
-
-    private void ApplyCardStateOnTransform()
-    {
-        foreach (CardInHand card in _cardsInHand)
-        {
-            Vector3 flow = Flow(_amplitude, card.flowOffset);
-            Transform spawnedTransform = card.SpawnedObject.transform;
-            if (_activeCard.Card == card && _activeCard.CurrentState != ActiveCard.State.None)
-            {
-                if (_activeCard.CurrentState == ActiveCard.State.CursorHover)
-                {
-                    spawnedTransform.localPosition = Vector3.Slerp(
-                        spawnedTransform.localPosition, card.BasePosition - spawnedTransform.forward * 0.5f, _lerpTime);
-                }
-                else if (_activeCard.CurrentState == ActiveCard.State.CursorFollow)
-                {
-                    Vector3 worldMousePos = _camera.ScreenToWorldPoint(new Vector3(
-                        Input.mousePosition.x,
-                        Input.mousePosition.y,
-                        4.0f
-                    ));
-
-                    RaycastHit targetObject = Target();
-                    if (targetObject.collider != null)
-                    {
-                        HighlightTarget(targetObject.collider.gameObject);
-                    }
-                    Vector3 newScale = ScaleByDepth(targetObject);
-                    spawnedTransform.localScale = Vector3.Lerp(spawnedTransform.localScale, newScale, _scaleFactor * Time.deltaTime);
-
-                    Vector3 localMousePos = transform.InverseTransformPoint(worldMousePos);
-
-                    
-                    spawnedTransform.localPosition = new Vector3(
-                        localMousePos.x + _cursorFollowOffset,
-                        localMousePos.y,
-                        spawnedTransform.localPosition.z
-                    );
-
-
-                    spawnedTransform.localEulerAngles = new Vector3(
-                        0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, 0.0f, _lerpTime));
-                }
-            }
-            else
-            {
-                spawnedTransform.localPosition = Vector3.Slerp(
-                    spawnedTransform.localPosition, card.BasePosition + flow, _lerpTime);
-
-                spawnedTransform.localEulerAngles = new Vector3(
-                    0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, card.BaseRotation, _lerpTime));
-
-                spawnedTransform.localScale = new Vector3(1.0f, 0.8f, 0.4f);
-            }
-        }
-    }
-
-    private void UpdateCardsLayout()
-    {
+    private void UpdateCardsLayout(){
         float startPosX = -0.5f *cardOffset* (_cardsInHand.Count - 1);
         float posX = startPosX;
         float rotZ = 1.5f * (_cardsInHand.Count - 1);
@@ -220,15 +119,133 @@ public class PlayerHand : MonoBehaviour
         }
     }
 
-    private Vector3 Flow(float amplitude, Vector3 offset){
+
+
+    //-----------------------------UpdateCardState-----------------------------
+    private void UpdateCardState(){
+        bool cardInUse = _activeCard.CurrentState == ActiveCard.State.CursorFollow;
+
+        if (cardInUse && Input.GetMouseButtonUp(0)){
+            ConsumeCard();
+        }
+        else if (cardInUse == false){
+            CheckCardSelection();
+        }
+    }
+
+    private void CheckCardSelection(){
+        _activeCard.Card = null;
+        _activeCard.CurrentState = ActiveCard.State.None;
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100.0f)){
+            if (hit.collider.gameObject.CompareTag("Card")){
+                int cardIndex = int.Parse(hit.collider.gameObject.name);
+                _activeCard.Card = _cardsInHand[cardIndex];
+                _activeCard.CurrentState = Input.GetMouseButtonDown(0) ?
+                    ActiveCard.State.CursorFollow :
+                    ActiveCard.State.CursorHover;
+            }
+        }
+    }
+
+    private void ConsumeCard(){
+        _activeCard.CurrentState = ActiveCard.State.None;
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100.0f))
+        {
+            if (hit.transform.TryGetComponent<InteractiveObject>(out var interactiveObject))
+            {
+                var cardDesc = _activeCard.Card.CardDescriptor;
+                var effectObject = Instantiate(cardDesc.EffectPrefab);
+                effectObject.transform.position = hit.transform.position;
+                Destroy(effectObject, effectObject.GetComponent<ParticleSystem>().main.duration);
+
+                _playerController.Spellcast(hit.transform);
+
+                cardDesc.CardEffectHandler.Handle(hit.transform.gameObject, interactiveObject.Type);
+            }
+        }
+    }
+    //------------------------------------------------------------------------
+
+
+
+    //------------------------ApplyCardStateOnTransform-----------------------
+    private void ApplyCardStateOnTransform(){
+        foreach (CardInHand card in _cardsInHand){
+
+            Transform spawnedTransform = card.SpawnedObject.transform;
+
+            bool cardAffected = _activeCard.Card == card && _activeCard.CurrentState != ActiveCard.State.None;
+            if (cardAffected){
+                if (_activeCard.CurrentState == ActiveCard.State.CursorHover){
+                    HighlightCard(card);
+                }
+                else if (_activeCard.CurrentState == ActiveCard.State.CursorFollow){
+                   CardCursorFollowing(spawnedTransform);
+                }
+            }
+            else{
+                WaveCard(card);
+            }
+        }
+    }
+
+    private void HighlightCard(CardInHand card){
+        Transform spawnedTransform = card.SpawnedObject.transform;
+        spawnedTransform.localPosition = Vector3.Slerp(
+            spawnedTransform.localPosition, 
+            card.BasePosition - spawnedTransform.forward * 0.5f, 
+            _lerpTime);
+    }
+
+    private void CardCursorFollowing(Transform spawnedTransform){
+         Vector3 worldMousePos = _camera.ScreenToWorldPoint(new Vector3(
+            Input.mousePosition.x,
+            Input.mousePosition.y,
+            4.0f
+        ));
+
+        RaycastHit targetObject = Target();
+        if (targetObject.collider != null){
+            HighlightTarget(targetObject.collider.gameObject);
+        }
+        Vector3 newScale = ScaleByDepth(targetObject);
+        spawnedTransform.localScale = Vector3.Lerp(spawnedTransform.localScale, newScale, _scaleFactor * Time.deltaTime);
+
+        Vector3 localMousePos = transform.InverseTransformPoint(worldMousePos);
+
+        spawnedTransform.localPosition = new Vector3(
+            localMousePos.x + _cursorFollowOffset,
+            localMousePos.y,
+            spawnedTransform.localPosition.z
+        );
+
+        spawnedTransform.localEulerAngles = new Vector3(
+            0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, 0.0f, _lerpTime));
+    }
+
+    private void WaveCard(CardInHand card){
+        Vector3 flow = FlowEffect(_amplitude, card.flowOffset);
+        Transform spawnedTransform = card.SpawnedObject.transform;
+       
+        spawnedTransform.localPosition = Vector3.Slerp(
+            spawnedTransform.localPosition, card.BasePosition + flow, _lerpTime);
+
+        spawnedTransform.localEulerAngles = new Vector3(
+            0, 0, Mathf.LerpAngle(spawnedTransform.localEulerAngles.z, card.BaseRotation, _lerpTime));
+
+        spawnedTransform.localScale = new Vector3(1.0f, 0.8f, 0.4f);
+    }
+
+    private Vector3 FlowEffect(float amplitude, Vector3 offset){
        return amplitude * new Vector3(
             Mathf.Sin(Time.time + offset.x) - 1f, 
             Mathf.Sin(Time.time + offset.y) - 1f,
             Mathf.Sin(Time.time + offset.z) - 1f);
     }
 
-    private RaycastHit Target()
-    {
+    private RaycastHit Target(){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         float rayDistance = 100f;
 
@@ -239,15 +256,7 @@ public class PlayerHand : MonoBehaviour
         return hit;
     }
 
-    private Vector3 ScaleByDepth(RaycastHit targetObject)
-    {
-        float depth = targetObject.collider != null ?  ((targetObject.point.z - 1f) -  _camera.transform.position.z) : 1f;
-        float scaleValue = Mathf.Clamp(1f / depth, _minScale, _maxScale);
-        return new Vector3(scaleValue, scaleValue, scaleValue);
-    }
-
-    private void HighlightTarget(GameObject target)
-    {
+    private void HighlightTarget(GameObject target){
         if(target.layer == LayerMask.NameToLayer("MagicSubmissive"))
         {
             MeshRenderer targetRenderer = target.GetComponent<MeshRenderer>();
@@ -275,5 +284,10 @@ public class PlayerHand : MonoBehaviour
         }  
     }
 
-
+    private Vector3 ScaleByDepth(RaycastHit targetObject){
+        float depth = targetObject.collider != null ?  ((targetObject.point.z - 1f) -  _camera.transform.position.z) : 1f;
+        float scaleValue = Mathf.Clamp(1f / depth, _minScale, _maxScale);
+        return new Vector3(scaleValue, scaleValue, scaleValue);
+    }
+    //------------------------------------------------------------------------
 }
