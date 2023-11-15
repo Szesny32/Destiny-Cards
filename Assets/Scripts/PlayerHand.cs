@@ -165,6 +165,9 @@ public class PlayerHand : MonoBehaviour
                 cardDesc.CardEffectHandler.Handle(hit.transform.gameObject, interactiveObject.Type);
             }
         }
+        _cardsInHand.Remove(_activeCard.Card);
+        Destroy(_activeCard.Card.SpawnedObject, 0.125f);
+        UpdateCardsLayout();
     }
     //------------------------------------------------------------------------
 
