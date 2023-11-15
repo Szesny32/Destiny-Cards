@@ -206,9 +206,11 @@ public class PlayerHand : MonoBehaviour
             4.0f
         ));
 
-        RaycastHit targetObject = Target();
+        RaycastHit targetObject = TargetObject(~LayerMask.GetMask("Cards"));
         if (targetObject.collider != null){
-            HighlightTarget(targetObject.collider.gameObject);
+            if (targetObject.transform.TryGetComponent<InteractiveObject>(out var interactiveObject)){
+                interactiveObject.TurnOutlineEffect();
+            }
         }
         Vector3 newScale = ScaleByDepth(targetObject);
         spawnedTransform.localScale = Vector3.Lerp(spawnedTransform.localScale, newScale, _scaleFactor * Time.deltaTime);
@@ -245,43 +247,13 @@ public class PlayerHand : MonoBehaviour
             Mathf.Sin(Time.time + offset.z) - 1f);
     }
 
-    private RaycastHit Target(){
+    private RaycastHit TargetObject(int layerMask){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         float rayDistance = 100f;
-
         RaycastHit hit;
-        bool successHit = Physics.Raycast(ray, out hit, rayDistance, ~LayerMask.GetMask("Cards"));
+        bool successHit = Physics.Raycast(ray, out hit, rayDistance, layerMask);
         Debug.DrawRay(ray.origin, ray.direction * rayDistance, successHit? Color.green : Color.red);
-        
         return hit;
-    }
-
-    private void HighlightTarget(GameObject target){
-        if(target.layer == LayerMask.NameToLayer("MagicSubmissive"))
-        {
-            MeshRenderer targetRenderer = target.GetComponent<MeshRenderer>();
-            bool hasOutlineMaterial = false;
-            foreach (Material mat in targetRenderer.materials)
-            {
-                if (mat.name == _outline.name + " (Instance)")
-                {
-                    hasOutlineMaterial = true;
-                    break;
-                }
-            }
-
-            if (!hasOutlineMaterial)
-            {
-                Material[] exisitingMaterials = targetRenderer.materials;
-                Material[] updatedMaterials = new Material[exisitingMaterials.Length + 1];
-                for (int i = 0; i < exisitingMaterials.Length; i++)
-                {
-                    updatedMaterials[i] = exisitingMaterials[i];
-                }
-                updatedMaterials[exisitingMaterials.Length] = _outline;
-                targetRenderer.materials = updatedMaterials;
-            }            
-        }  
     }
 
     private Vector3 ScaleByDepth(RaycastHit targetObject){
