@@ -13,6 +13,7 @@ public class CardInHand
     public float BaseRotation;
 }
 
+
 public class ActiveCard
 {
     public enum State
@@ -23,6 +24,7 @@ public class ActiveCard
     }
 
     public CardInHand Card;
+    public int SourceIndex = -1;
     public State CurrentState;
 }
 
@@ -144,6 +146,13 @@ public class PlayerHand : MonoBehaviour
                 _activeCard.CurrentState = Input.GetMouseButtonDown(0) ?
                     ActiveCard.State.CursorFollow :
                     ActiveCard.State.CursorHover;
+
+                if (_activeCard.CurrentState == ActiveCard.State.CursorFollow)
+                {
+                    _activeCard.SourceIndex = cardIndex;
+                    _cardsInHand.RemoveAt(cardIndex);
+                    UpdateCardsLayout();
+                }
             }
         }
     }
@@ -163,10 +172,20 @@ public class PlayerHand : MonoBehaviour
                 _playerController.Spellcast(hit.transform);
 
                 cardDesc.CardEffectHandler.Handle(hit.transform.gameObject, interactiveObject.Type);
+
+                _cardsInHand.Remove(_activeCard.Card);
+                Destroy(_activeCard.Card.SpawnedObject, 0.125f);
+            }
+            else
+            {
+                _cardsInHand.Insert(_activeCard.SourceIndex, _activeCard.Card);
             }
         }
-        _cardsInHand.Remove(_activeCard.Card);
-        Destroy(_activeCard.Card.SpawnedObject, 0.125f);
+        else
+        {
+            _cardsInHand.Insert(_activeCard.SourceIndex, _activeCard.Card);
+        }
+
         UpdateCardsLayout();
     }
     //------------------------------------------------------------------------
@@ -176,21 +195,19 @@ public class PlayerHand : MonoBehaviour
     //------------------------ApplyCardStateOnTransform-----------------------
     private void ApplyCardStateOnTransform(){
         foreach (CardInHand card in _cardsInHand){
-
-            Transform spawnedTransform = card.SpawnedObject.transform;
-
-            bool cardAffected = _activeCard.Card == card && _activeCard.CurrentState != ActiveCard.State.None;
-            if (cardAffected){
-                if (_activeCard.CurrentState == ActiveCard.State.CursorHover){
-                    HighlightCard(card);
-                }
-                else if (_activeCard.CurrentState == ActiveCard.State.CursorFollow){
-                   CardCursorFollowing(spawnedTransform);
-                }
+            if (card == _activeCard.Card && _activeCard.CurrentState == ActiveCard.State.CursorHover)
+            {
+                HighlightCard(card);
             }
-            else{
+            else
+            {
                 WaveCard(card);
             }
+        }
+        
+        if (_activeCard.CurrentState == ActiveCard.State.CursorFollow)
+        {
+            CardCursorFollowing(_activeCard.Card.SpawnedObject.transform);
         }
     }
 

@@ -23,8 +23,8 @@ public class InteractiveObject : MonoBehaviour
     HiglightType highlightState = HiglightType.None;
 
     private float sustainingTargetingTime = 0.125f;
-    public float targetingTimeElapsed = 0f;
-    public bool displayAllTargets = false; 
+    private float targetingTimeElapsed = 0f;
+    private bool displayAllTargets = false; 
 
     public InteractiveObjectType Type;
 
