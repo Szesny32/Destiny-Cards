@@ -11,8 +11,10 @@ public class PullEffectHandler : ICardEffectHandler
 {
     public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
-        Rigidbody rb = targetGameObject.GetComponent<Rigidbody>();
-        rb.AddForce(new Vector3(0, 500, 0));
+        if(targetObjectType != InteractiveObjectType.Door){
+            Rigidbody rb = targetGameObject.GetComponent<Rigidbody>();
+            rb.AddForce(new Vector3(0, 500, 0));
+        }
     }
 }
 
@@ -30,6 +32,8 @@ public class ResizeUpEffectHandler : ICardEffectHandler
 {
     public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
+
+        //targetGameObject.transform.localScale = 2f * Vector3.one
         targetGameObject.transform.localScale = 2f * targetGameObject.transform.localScale;
     }
 }
@@ -39,6 +43,7 @@ public class ResizeDownEffectHandler : ICardEffectHandler
 {
     public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
+        //targetGameObject.transform.localScale = 0.5f * Vector3.one;
         targetGameObject.transform.localScale = 0.5f * targetGameObject.transform.localScale;
     }
 }
