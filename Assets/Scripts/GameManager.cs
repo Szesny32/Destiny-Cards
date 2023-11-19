@@ -11,6 +11,7 @@ public class CardDescriptor
     public string Name;
     public GameObject Prefab;
     public GameObject EffectPrefab;
+    public GameObject SecondEffectPrefab;
     public GameObject HighlightEffect;
     public GameObject HoldEffect;
     public ICardEffectHandler CardEffectHandler;
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
             Name = "Pull",
             Prefab = GetPrefab("card_pull"),
             EffectPrefab = GetPrefab("effect_greenhit"),
+            SecondEffectPrefab = null,
             HighlightEffect = GetPrefab("effect_portal_blue"),
             HoldEffect = GetPrefab("effect_magic_cricle"),
             CardEffectHandler = new PullEffectHandler(),
@@ -65,6 +67,7 @@ public class GameManager : MonoBehaviour
             Name = "Fireball",
             Prefab = GetPrefab("card_fireball"),
             EffectPrefab = GetPrefab("effect_holyhit"),
+            SecondEffectPrefab = GetPrefab("effect_fire_meteor"),
             HighlightEffect = GetPrefab("effect_portal_blue"),
             HoldEffect = GetPrefab("effect_magic_cricle"),
             CardEffectHandler = new FireballEffectHandler(),
@@ -76,6 +79,7 @@ public class GameManager : MonoBehaviour
             Name = "ResizeUp",
             Prefab = GetPrefab("card_pull"),
             EffectPrefab = GetPrefab("effect_greenhit"),
+            SecondEffectPrefab = null,
             HighlightEffect = GetPrefab("effect_portal_blue"),
             HoldEffect = GetPrefab("effect_magic_cricle"),
             CardEffectHandler = new ResizeUpEffectHandler(),
@@ -87,6 +91,7 @@ public class GameManager : MonoBehaviour
             Name = "ResizeDown",
             Prefab = GetPrefab("card_pull"),
             EffectPrefab = GetPrefab("effect_greenhit"),
+            SecondEffectPrefab = null,
             HighlightEffect = GetPrefab("effect_portal_blue"),
             HoldEffect = GetPrefab("effect_magic_cricle"),
             CardEffectHandler = new ResizeDownEffectHandler(),

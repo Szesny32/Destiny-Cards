@@ -226,14 +226,11 @@ public class PlayerHand : MonoBehaviour
         {
             if (hit.transform.TryGetComponent<InteractiveObject>(out var interactiveObject))
             {
-                var cardDesc = _activeCard.Card.CardDescriptor;
-                var effectObject = Instantiate(cardDesc.EffectPrefab);
-                effectObject.transform.position = hit.transform.position;
-                Destroy(effectObject, effectObject.GetComponent<ParticleSystem>().main.duration);
 
+                var cardDesc = _activeCard.Card.CardDescriptor;
                 _playerController.Spellcast(hit.transform);
 
-                cardDesc.CardEffectHandler.Handle(hit.transform.gameObject, interactiveObject.Type);
+                cardDesc.CardEffectHandler.Handle(_activeCard.Card, hit.transform.gameObject, interactiveObject.Type);
 
                 _cardsInHand.Remove(_activeCard.Card);
                 Destroy(_activeCard.Card.SpawnedObject, 0.125f);
