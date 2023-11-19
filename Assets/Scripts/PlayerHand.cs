@@ -22,10 +22,15 @@ public class ActiveCard
         CursorHover,
         CursorFollow
     }
-
     public CardInHand Card;
     public int SourceIndex = -1;
     public State CurrentState;
+
+    public GameObject HoverEffect;
+    public GameObject FollowEffect;
+
+    public float effectDuration = 0f;
+
 }
 
 
@@ -58,9 +63,16 @@ public class PlayerHand : MonoBehaviour
     private float _cursorFollowOffset = 1f;
 
     [SerializeField]
+    private float _highlightCardEffectScale = 1.2f;
+
+    [SerializeField]
+    private float _followCardEffectScale = 0.4f;
+
+    [SerializeField]
     private Material _outline;
 
     private MagePlayerController _playerController;
+
 
     private void Awake(){
         _playerController = LevelManager.Instance.Player.GetComponent<MagePlayerController>();
@@ -68,12 +80,18 @@ public class PlayerHand : MonoBehaviour
 
         var pullCard = GameManager.Instance.GetCardDescriptor("card_pull");
         AddCard(pullCard);
-        AddCard(pullCard);
-        AddCard(pullCard);
 
         var fireballCard = GameManager.Instance.GetCardDescriptor("card_fireball");
         AddCard(fireballCard);
-        AddCard(fireballCard);
+
+        var resizeUpCard = GameManager.Instance.GetCardDescriptor("card_resizeUp"); 
+        AddCard(resizeUpCard);
+        AddCard(resizeUpCard);
+
+        var resizeDownCard = GameManager.Instance.GetCardDescriptor("card_resizeDown"); 
+        AddCard(resizeDownCard);
+        AddCard(resizeDownCard);
+
     }
 
     private void Update(){
@@ -124,37 +142,81 @@ public class PlayerHand : MonoBehaviour
 
 
     //-----------------------------UpdateCardState-----------------------------
-    private void UpdateCardState(){
+    private void UpdateCardState() {
         bool cardInUse = _activeCard.CurrentState == ActiveCard.State.CursorFollow;
-
-        if (cardInUse && Input.GetMouseButtonUp(0)){
-            ConsumeCard();
+        _activeCard.effectDuration -= Time.deltaTime;
+        if (cardInUse) {
+            if(Input.GetMouseButtonUp(0)) {
+                ConsumeCard();
+                Destroy(_activeCard.FollowEffect, 0.125f);
+            } 
+            else {
+                if(_activeCard.FollowEffect == null){
+                    var cardDesc = _activeCard.Card.CardDescriptor;
+                    _activeCard.FollowEffect = Instantiate(cardDesc.HoldEffect, _activeCard.Card.SpawnedObject.transform);
+                    _activeCard.FollowEffect.transform.localRotation = Quaternion.Euler(90, 0, 0);
+                    _activeCard.FollowEffect.transform.localScale = _followCardEffectScale * Vector3.one;
+                }
+            }
+            
         }
-        else if (cardInUse == false){
+        else {
             CheckCardSelection();
+            Destroy(_activeCard.FollowEffect, 0.125f);
         }
+        
     }
 
-    private void CheckCardSelection(){
-        _activeCard.Card = null;
-        _activeCard.CurrentState = ActiveCard.State.None;
+    private void CheckCardSelection(){        
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 100.0f)){
             if (hit.collider.gameObject.CompareTag("Card")){
                 int cardIndex = int.Parse(hit.collider.gameObject.name);
+
+                bool newActive = _activeCard.Card == null  || _activeCard.Card != _cardsInHand[cardIndex];
                 _activeCard.Card = _cardsInHand[cardIndex];
+
+                if(newActive){
+
+                    Destroy(_activeCard.HoverEffect);
+                    Destroy(_activeCard.FollowEffect);     
+                    
+                    
+                    var cardDesc = _activeCard.Card.CardDescriptor;
+                    _activeCard.HoverEffect = Instantiate(cardDesc.HighlightEffect, _activeCard.Card.SpawnedObject.transform);
+                    _activeCard.HoverEffect.transform.position = _activeCard.Card.SpawnedObject.transform.position;
+                    _activeCard.HoverEffect.transform.localScale = _highlightCardEffectScale * Vector3.one;
+      
+                }
+
                 _activeCard.CurrentState = Input.GetMouseButtonDown(0) ?
                     ActiveCard.State.CursorFollow :
                     ActiveCard.State.CursorHover;
 
                 if (_activeCard.CurrentState == ActiveCard.State.CursorFollow)
                 {
+                    Destroy(_activeCard.HoverEffect);
                     _activeCard.SourceIndex = cardIndex;
                     _cardsInHand.RemoveAt(cardIndex);
                     UpdateCardsLayout();
                 }
+            }    else {
+                _activeCard.CurrentState = ActiveCard.State.None;
+                _activeCard.Card = null;
+
+                Destroy(_activeCard.HoverEffect);     
+                Destroy(_activeCard.FollowEffect);     
+                
             }
         }
+        else {
+                _activeCard.CurrentState = ActiveCard.State.None;
+                _activeCard.Card = null;
+
+                Destroy(_activeCard.HoverEffect);
+                Destroy(_activeCard.FollowEffect);     
+                
+            }
     }
 
     private void ConsumeCard(){

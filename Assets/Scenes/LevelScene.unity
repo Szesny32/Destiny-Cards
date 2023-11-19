@@ -901,10 +901,12 @@ MonoBehaviour:
   _lerpTime: 0.06
   _amplitude: 0.04
   cardOffset: 1.125
-  _minScale: 0.25
+  _minScale: 0.3
   _maxScale: 0.8
   _scaleFactor: 10
   _cursorFollowOffset: 0.25
+  _highlightCardEffectScale: 1.2
+  _followCardEffectScale: 0.4
   _outline: {fileID: 2100000, guid: f60cb568bdf7dea489183c591c8d2f67, type: 2}
 --- !u!1001 &338496793
 PrefabInstance:
@@ -3306,6 +3308,10 @@ MonoBehaviour:
     Prefab: {fileID: 6823302871133167919, guid: 3138a83bedbd6ad4481ba0b061da2eb6, type: 3}
   - Id: effect_holyhit
     Prefab: {fileID: 2944396702758532163, guid: e190bf97c041e58448af6b043116cba0, type: 3}
+  - Id: effect_portal_blue
+    Prefab: {fileID: 5607819269926399345, guid: 45e0f06c750176947862c10346226439, type: 3}
+  - Id: effect_magic_cricle
+    Prefab: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
 --- !u!1001 &1815699470
 PrefabInstance:
   m_ObjectHideFlags: 0

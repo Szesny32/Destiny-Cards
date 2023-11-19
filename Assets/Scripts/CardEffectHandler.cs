@@ -20,6 +20,23 @@ public class FireballEffectHandler : ICardEffectHandler
 {
     public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
+       Object.Destroy(targetGameObject, 0.5f);
+    }
+}
 
+public class ResizeUpEffectHandler : ICardEffectHandler
+{
+    public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
+    {
+        targetGameObject.transform.localScale = 2f * targetGameObject.transform.localScale;
+    }
+}
+
+
+public class ResizeDownEffectHandler : ICardEffectHandler
+{
+    public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
+    {
+        targetGameObject.transform.localScale = 0.5f * targetGameObject.transform.localScale;
     }
 }
