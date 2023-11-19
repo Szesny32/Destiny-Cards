@@ -57,3 +57,15 @@ public class ResizeDownEffectHandler : ICardEffectHandler
     }
 }
 
+public class SpectralVisionEffectHandler : ICardEffectHandler
+{
+    public override void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType)
+    {
+        InteractiveObject[] objects = GameObject.FindObjectsOfType<InteractiveObject>();
+
+        foreach (InteractiveObject interactiveObject in objects){
+            interactiveObject.TurnSpectralVisionEffect();
+        }
+    }
+}
+

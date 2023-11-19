@@ -78,26 +78,28 @@ public class PlayerHand : MonoBehaviour
         _playerController = LevelManager.Instance.Player.GetComponent<MagePlayerController>();
         _camera = LevelManager.Instance.MainCamera;
 
-        var pullCard = GameManager.Instance.GetCardDescriptor("card_pull");
+        var pullCard = GameManager.Instance.GetCardDescriptor(CardType.Pull);
         AddCard(pullCard);
 
-        var fireballCard = GameManager.Instance.GetCardDescriptor("card_fireball");
+        var fireballCard = GameManager.Instance.GetCardDescriptor(CardType.Fireball);
         AddCard(fireballCard);
 
-        var resizeUpCard = GameManager.Instance.GetCardDescriptor("card_resizeUp"); 
-        AddCard(resizeUpCard);
+        var resizeUpCard = GameManager.Instance.GetCardDescriptor(CardType.ResizeUp); 
         AddCard(resizeUpCard);
 
-        var resizeDownCard = GameManager.Instance.GetCardDescriptor("card_resizeDown"); 
+        var resizeDownCard = GameManager.Instance.GetCardDescriptor(CardType.ResizeDown); 
         AddCard(resizeDownCard);
-        AddCard(resizeDownCard);
+
+        var spectralVisionCard = GameManager.Instance.GetCardDescriptor(CardType.SpectralVision); 
+        AddCard(spectralVisionCard);
+
 
     }
 
     private void Update(){
         if (Input.GetKeyDown(KeyCode.T))
         {
-            var fireballCard = GameManager.Instance.GetCardDescriptor("card_fireball");
+            var fireballCard = GameManager.Instance.GetCardDescriptor(CardType.Fireball);
             AddCard(fireballCard);
         }
 
@@ -219,29 +221,36 @@ public class PlayerHand : MonoBehaviour
             }
     }
 
+    private void CastSpell(CardInHand card, Transform targetGameObject, InteractiveObjectType targetObjectType){
+        if(targetGameObject != null){
+            _playerController.Spellcast(targetGameObject);
+        } 
+
+        card.CardDescriptor.CardEffectHandler.Handle(
+                card, 
+                targetGameObject != null? targetGameObject.gameObject : null, 
+                targetObjectType);
+            
+        _cardsInHand.Remove(card);
+        Destroy(card.SpawnedObject, 0.125f);
+    }
     private void ConsumeCard(){
+   
         _activeCard.CurrentState = ActiveCard.State.None;
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100.0f))
-        {
-            if (hit.transform.TryGetComponent<InteractiveObject>(out var interactiveObject))
-            {
-
+        if(_activeCard.Card.CardDescriptor.Category == CardCategory.World){
+            CastSpell(_activeCard.Card, null, InteractiveObjectType.None);
+        }
+        else if (Physics.Raycast(ray, out RaycastHit hit, 100.0f)) {
+            if (hit.transform.TryGetComponent<InteractiveObject>(out var interactiveObject)) {
                 var cardDesc = _activeCard.Card.CardDescriptor;
-                _playerController.Spellcast(hit.transform);
-
-                cardDesc.CardEffectHandler.Handle(_activeCard.Card, hit.transform.gameObject, interactiveObject.Type);
-
-                _cardsInHand.Remove(_activeCard.Card);
-                Destroy(_activeCard.Card.SpawnedObject, 0.125f);
+                CastSpell(_activeCard.Card, hit.transform, interactiveObject.Type);
             }
-            else
-            {
+            else {
                 _cardsInHand.Insert(_activeCard.SourceIndex, _activeCard.Card);
             }
         }
-        else
-        {
+        else {
             _cardsInHand.Insert(_activeCard.SourceIndex, _activeCard.Card);
         }
 

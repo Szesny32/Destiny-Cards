@@ -9,6 +9,7 @@ public enum InteractiveObjectType
     Door,
     Barrel,
     Player,
+    None,
 }
 
 public enum HiglightType
@@ -24,7 +25,7 @@ public class InteractiveObject : MonoBehaviour
     HiglightType highlightState = HiglightType.None;
 
     private float sustainingTargetingTime = 0.125f;
-    private float targetingTimeElapsed = 0f;
+    private float targetingTimeElapsed = -1f;
     private bool displayAllTargets = false; 
 
     public InteractiveObjectType Type;
@@ -35,6 +36,9 @@ public class InteractiveObject : MonoBehaviour
     private Vector3 _localScale;
     public float _scalingTime = 2f;
 
+    private float spectralVisionTime = 5f;
+    private float spectralVisionElapsed = -1f;
+
 
     public void Start(){
         _localScale = transform.localScale;
@@ -44,16 +48,25 @@ public class InteractiveObject : MonoBehaviour
 
 
     public void Update(){
+        if(spectralVisionElapsed > 0f)
+            Debug.Log(spectralVisionElapsed);
         displayAllTargets = Input.GetKey(KeyCode.LeftAlt);
 
         HandleHighlightState();
         HandleScaling();
         targetingTimeElapsed -= Time.deltaTime;
+        spectralVisionElapsed -= Time.deltaTime;
     }
 
     public void TurnOutlineEffect(){
         targetingTimeElapsed = sustainingTargetingTime;
     }
+
+    public void TurnSpectralVisionEffect(){
+        spectralVisionElapsed = spectralVisionTime;
+    }
+
+
 
     private void HandleHighlightState(){
         if(highlightState != HiglightType.Target && targetingTimeElapsed > 0f){
@@ -63,7 +76,7 @@ public class InteractiveObject : MonoBehaviour
             effect.transform.localScale = effectScale * Vector3.one;
         } 
         else if(highlightState == HiglightType.Target && targetingTimeElapsed < 0f){
-            highlightState = displayAllTargets ? HiglightType.All : HiglightType.None;
+            highlightState = (spectralVisionElapsed < 0f) ? HiglightType.None : HiglightType.All;
             Destroy(effect);
             if(highlightState == HiglightType.All){
                 effect = Instantiate(altEffect, this.transform);
@@ -71,15 +84,14 @@ public class InteractiveObject : MonoBehaviour
             }
             
         } 
-        else if(highlightState == HiglightType.None && displayAllTargets){
+        else if(highlightState == HiglightType.None && (spectralVisionElapsed >= 0f)){
 
             highlightState = HiglightType.All;
             Destroy(effect);
             effect = Instantiate(altEffect, this.transform);
-            effect.transform.localScale = effectScale * Vector3.one;
-            
+            effect.transform.localScale = effectScale * Vector3.one; 
         }
-        else if(highlightState == HiglightType.All && !displayAllTargets){
+        else if(highlightState == HiglightType.All && (spectralVisionElapsed < 0f)){
             highlightState = HiglightType.None;
             Destroy(effect);
         }
