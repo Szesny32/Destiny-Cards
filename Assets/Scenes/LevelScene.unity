@@ -3309,6 +3309,12 @@ MonoBehaviour:
     Prefab: {fileID: 360041721585030988, guid: d1a34f2b29f4f4d49a6b3911d4b9fb48, type: 3}
   - Id: card_fireball
     Prefab: {fileID: 8782672931173387392, guid: fda115a585451fc48bc50596394d2354, type: 3}
+  - Id: card_resize_up
+    Prefab: {fileID: 8782672931173387392, guid: efd14b0a835fd8b489cd692da5863cdf, type: 3}
+  - Id: card_resize_down
+    Prefab: {fileID: 8782672931173387392, guid: 6a80b74f945a3c346a46844a0b00c084, type: 3}
+  - Id: card_spectral_vision
+    Prefab: {fileID: 8782672931173387392, guid: c3dd16670009832419f2ec1cb0168729, type: 3}
   - Id: effect_greenhit
     Prefab: {fileID: 6823302871133167919, guid: 3138a83bedbd6ad4481ba0b061da2eb6, type: 3}
   - Id: effect_holyhit

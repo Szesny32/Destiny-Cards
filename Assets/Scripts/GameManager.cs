@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
             Type = CardType.ResizeUp,
             Category = CardCategory.Target,
             Name = "ResizeUp",
-            Prefab = GetPrefab("card_pull"),
+            Prefab = GetPrefab("card_resize_up"),
             EffectPrefab = GetPrefab("effect_greenhit"),
             SecondEffectPrefab = null,
             HighlightEffect = GetPrefab("effect_portal_blue"),
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
             Type = CardType.ResizeDown,
             Category = CardCategory.Target,
             Name = "ResizeDown",
-            Prefab = GetPrefab("card_pull"),
+            Prefab = GetPrefab("card_resize_down"),
             EffectPrefab = GetPrefab("effect_greenhit"),
             SecondEffectPrefab = null,
             HighlightEffect = GetPrefab("effect_portal_blue"),
@@ -124,16 +124,13 @@ public class GameManager : MonoBehaviour
             Type = CardType.SpectralVision,
             Category = CardCategory.World,
             Name = "SpectralVision",
-            Prefab = GetPrefab("card_pull"),
+            Prefab = GetPrefab("card_spectral_vision"),
             EffectPrefab = GetPrefab("effect_magic_cricle"),
             SecondEffectPrefab = null,
             HighlightEffect = GetPrefab("effect_portal_blue"),
             HoldEffect = GetPrefab("effect_magic_cricle"),
             CardEffectHandler = new SpectralVisionEffectHandler(),
         };
-
-        
-
     }
 
     public CardDescriptor GetCardDescriptor(CardType type)
