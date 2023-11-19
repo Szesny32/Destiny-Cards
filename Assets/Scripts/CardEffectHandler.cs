@@ -20,7 +20,9 @@ public class FireballEffectHandler : ICardEffectHandler
 {
     public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
-       Object.Destroy(targetGameObject, 0.5f);
+        if(targetObjectType != InteractiveObjectType.Player){
+            Object.Destroy(targetGameObject, 0.5f);
+        }
     }
 }
 

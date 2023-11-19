@@ -8,6 +8,7 @@ public enum InteractiveObjectType
     Chest,
     Door,
     Barrel,
+    Player,
 }
 
 public enum HiglightType
@@ -27,26 +28,16 @@ public class InteractiveObject : MonoBehaviour
     private bool displayAllTargets = false; 
 
     public InteractiveObjectType Type;
-
-    private Material[] baseMaterials;
-    private Material[] normalMaterials;
-    private Material[] altMaterials;
-    private MeshRenderer meshRenderer;
+    private GameObject targetEffect;
+    private GameObject altEffect;
+    private GameObject effect;
+    public float effectScale = 0.5f;
 
     public void Start(){
-        meshRenderer =  GetComponent<MeshRenderer>();
-        baseMaterials = meshRenderer.materials;
-        normalMaterials = SetMaterial("Materials/Outline");
-        altMaterials = SetMaterial("Materials/AltOutline");
+        targetEffect = Resources.Load<GameObject>("Magic circle");
+        altEffect = Resources.Load<GameObject>("Magic circle 2");
     }
 
-    private Material[] SetMaterial(string materialPath){
-        Material[] materials = new Material[baseMaterials.Length + 1];
-        System.Array.Copy(baseMaterials, materials, baseMaterials.Length);
-        Material outline = Resources.Load<Material>(materialPath);
-        materials[materials.Length - 1] = outline;
-        return materials;
-    }
 
     public void Update(){
         displayAllTargets = Input.GetKey(KeyCode.LeftAlt);
@@ -61,20 +52,31 @@ public class InteractiveObject : MonoBehaviour
 
     private void VerifyHighlightState(){
         if(highlightState != HiglightType.Target && targetingTimeElapsed > 0f){
-            meshRenderer.materials = normalMaterials;
             highlightState = HiglightType.Target;
+            Destroy(effect);
+            effect = Instantiate(targetEffect, this.transform);
+            effect.transform.localScale = effectScale * Vector3.one;
         } 
         else if(highlightState == HiglightType.Target && targetingTimeElapsed < 0f){
-            meshRenderer.materials = displayAllTargets ? altMaterials : baseMaterials;
             highlightState = displayAllTargets ? HiglightType.All : HiglightType.None;
+            Destroy(effect);
+            if(highlightState == HiglightType.All){
+                effect = Instantiate(altEffect, this.transform);
+                effect.transform.localScale = effectScale * Vector3.one;
+            }
+            
         } 
         else if(highlightState == HiglightType.None && displayAllTargets){
-            meshRenderer.materials = altMaterials;
+
             highlightState = HiglightType.All;
+            Destroy(effect);
+            effect = Instantiate(altEffect, this.transform);
+            effect.transform.localScale = effectScale * Vector3.one;
+            
         }
         else if(highlightState == HiglightType.All && !displayAllTargets){
-            meshRenderer.materials = baseMaterials;
             highlightState = HiglightType.None;
+            Destroy(effect);
         }
     }
 }
