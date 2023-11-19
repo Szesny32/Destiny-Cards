@@ -5,9 +5,10 @@ using UnityEngine;
 public abstract class ICardEffectHandler 
 {
     abstract public void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType);
-    public void ActivateSpell(GameObject spellPrefab, GameObject targetGameObject){
+    public void ActivateSpell(GameObject spellPrefab, GameObject targetGameObject, float effectScale = 1f){
         var effectObject = GameObject.Instantiate(spellPrefab);
         effectObject.transform.position = targetGameObject.transform.position;
+        effectObject.transform.localScale = effectScale * targetGameObject.transform.localScale;
         GameObject.Destroy(effectObject, effectObject.GetComponent<ParticleSystem>().main.duration);
     }
 }
@@ -31,7 +32,8 @@ public class FireballEffectHandler : ICardEffectHandler
     {
         if(targetObjectType != InteractiveObjectType.Player){
             base.ActivateSpell(card.CardDescriptor.EffectPrefab, targetGameObject);
-            Object.Destroy(targetGameObject, 0.5f);
+            base.ActivateSpell(card.CardDescriptor.SecondEffectPrefab, targetGameObject, 0.2f);
+            Object.Destroy(targetGameObject, 4f);
         }
     }
 }

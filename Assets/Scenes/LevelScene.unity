@@ -3317,6 +3317,8 @@ MonoBehaviour:
     Prefab: {fileID: 5607819269926399345, guid: 45e0f06c750176947862c10346226439, type: 3}
   - Id: effect_magic_cricle
     Prefab: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+  - Id: effect_fire_meteor
+    Prefab: {fileID: 7957833072274404953, guid: 3355f6bfa6db8b24281b827de929694c, type: 3}
 --- !u!1001 &1815699470
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4676,6 +4678,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 4
   effectScale: 0.5
+  _scalingTime: 2
 --- !u!1 &954683106614818624
 GameObject:
   m_ObjectHideFlags: 0
@@ -5724,6 +5727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 0
   effectScale: 0.5
+  _scalingTime: 2
 --- !u!4 &3603708413584900836
 Transform:
   m_ObjectHideFlags: 0
@@ -6442,6 +6446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 2
   effectScale: 1
+  _scalingTime: 2
 --- !u!65 &5640173057449404888
 BoxCollider:
   m_ObjectHideFlags: 0
