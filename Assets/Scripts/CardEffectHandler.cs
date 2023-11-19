@@ -32,9 +32,7 @@ public class ResizeUpEffectHandler : ICardEffectHandler
 {
     public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
-
-        //targetGameObject.transform.localScale = 2f * Vector3.one
-        targetGameObject.transform.localScale = 2f * targetGameObject.transform.localScale;
+        targetGameObject.GetComponent<InteractiveObject>().Rescale(2f);
     }
 }
 
@@ -43,7 +41,6 @@ public class ResizeDownEffectHandler : ICardEffectHandler
 {
     public void Handle(GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
-        //targetGameObject.transform.localScale = 0.5f * Vector3.one;
-        targetGameObject.transform.localScale = 0.5f * targetGameObject.transform.localScale;
+        targetGameObject.GetComponent<InteractiveObject>().Rescale(0.5f);
     }
 }

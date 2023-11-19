@@ -32,8 +32,12 @@ public class InteractiveObject : MonoBehaviour
     private GameObject altEffect;
     private GameObject effect;
     public float effectScale = 0.5f;
+    private Vector3 _localScale;
+    public float _scalingTime = 2f;
+
 
     public void Start(){
+        _localScale = transform.localScale;
         targetEffect = Resources.Load<GameObject>("Magic circle");
         altEffect = Resources.Load<GameObject>("Magic circle 2");
     }
@@ -42,7 +46,8 @@ public class InteractiveObject : MonoBehaviour
     public void Update(){
         displayAllTargets = Input.GetKey(KeyCode.LeftAlt);
 
-        VerifyHighlightState();
+        HandleHighlightState();
+        HandleScaling();
         targetingTimeElapsed -= Time.deltaTime;
     }
 
@@ -50,7 +55,7 @@ public class InteractiveObject : MonoBehaviour
         targetingTimeElapsed = sustainingTargetingTime;
     }
 
-    private void VerifyHighlightState(){
+    private void HandleHighlightState(){
         if(highlightState != HiglightType.Target && targetingTimeElapsed > 0f){
             highlightState = HiglightType.Target;
             Destroy(effect);
@@ -77,6 +82,16 @@ public class InteractiveObject : MonoBehaviour
         else if(highlightState == HiglightType.All && !displayAllTargets){
             highlightState = HiglightType.None;
             Destroy(effect);
+        }
+    }
+
+    public void Rescale(float scale){
+        _localScale = scale * _localScale;
+    }
+
+    private void HandleScaling(){
+        if(_localScale != transform.localScale){
+            transform.localScale = Vector3.Lerp(transform.localScale, _localScale, _scalingTime * Time.deltaTime);
         }
     }
 }
