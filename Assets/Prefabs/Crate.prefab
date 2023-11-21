@@ -113,6 +113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
+  effectScale: 0.5
+  _scalingTime: 2
 --- !u!54 &5776015966363724195
 Rigidbody:
   m_ObjectHideFlags: 0

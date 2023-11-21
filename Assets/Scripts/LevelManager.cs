@@ -13,9 +13,14 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private GameObject _player;
 
+    [SerializeField]
+    private PlayerHand _playerHand;
+
     public Camera MainCamera => _mainCamera;
 
     public GameObject Player => _player;
+
+    public PlayerHand PlayerHand => _playerHand;
 
     private void Awake()
     {

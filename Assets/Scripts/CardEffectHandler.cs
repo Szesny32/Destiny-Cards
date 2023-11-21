@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ICardEffectHandler 
+public abstract class CardEffectHandler 
 {
     abstract public void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType);
     public void ActivateSpell(GameObject spellPrefab, GameObject targetGameObject, float effectScale = 1f){
@@ -14,23 +14,29 @@ public abstract class ICardEffectHandler
 }
 
 
-public class PullEffectHandler : ICardEffectHandler
+public class PullEffectHandler : CardEffectHandler
 {
     public override void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
         if(targetObjectType != InteractiveObjectType.Door){
             base.ActivateSpell(card.CardDescriptor.EffectPrefab, targetGameObject);
             Rigidbody rb = targetGameObject.GetComponent<Rigidbody>();
-            rb.AddForce(new Vector3(0, 500, 0));
+            rb.velocity = new Vector3(rb.velocity.x, 10.0f, rb.velocity.z);
         }
     }
 }
 
-public class FireballEffectHandler : ICardEffectHandler
+public class FireballEffectHandler : CardEffectHandler
 {
     public override void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
-        if(targetObjectType != InteractiveObjectType.Player){
+        if (targetObjectType == InteractiveObjectType.Torch)
+        {
+            Torch torch = targetGameObject.GetComponent<Torch>();
+            ActivateSpell(card.CardDescriptor.EffectPrefab, targetGameObject);
+            torch.TurnOn();
+        }
+        else if (targetObjectType != InteractiveObjectType.Player){
             base.ActivateSpell(card.CardDescriptor.EffectPrefab, targetGameObject);
             base.ActivateSpell(card.CardDescriptor.SecondEffectPrefab, targetGameObject, 0.2f);
             Object.Destroy(targetGameObject, 4f);
@@ -38,26 +44,38 @@ public class FireballEffectHandler : ICardEffectHandler
     }
 }
 
-public class ResizeUpEffectHandler : ICardEffectHandler
+public class ResizeUpEffectHandler : CardEffectHandler
 {
     public override void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
         base.ActivateSpell(card.CardDescriptor.EffectPrefab, targetGameObject);
         targetGameObject.GetComponent<InteractiveObject>().Rescale(2f);
+
+        Rigidbody targetRigidbody = targetGameObject.GetComponent<Rigidbody>();
+        if (targetRigidbody != null)
+        {
+            targetRigidbody.mass *= 10.0f;
+        }
     }
 }
 
 
-public class ResizeDownEffectHandler : ICardEffectHandler
+public class ResizeDownEffectHandler : CardEffectHandler
 {
     public override void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
         base.ActivateSpell(card.CardDescriptor.EffectPrefab, targetGameObject);
         targetGameObject.GetComponent<InteractiveObject>().Rescale(0.5f);
+
+        Rigidbody targetRigidbody = targetGameObject.GetComponent<Rigidbody>();
+        if (targetRigidbody != null)
+        {
+            targetRigidbody.mass *= 0.1f;
+        }
     }
 }
 
-public class SpectralVisionEffectHandler : ICardEffectHandler
+public class SpectralVisionEffectHandler : CardEffectHandler
 {
     public override void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType)
     {
@@ -69,3 +87,18 @@ public class SpectralVisionEffectHandler : ICardEffectHandler
     }
 }
 
+public class OpenEffectHandler : CardEffectHandler
+{
+    public override void Handle(CardInHand card, GameObject targetGameObject, InteractiveObjectType targetObjectType)
+    {
+        if (targetObjectType == InteractiveObjectType.Chest)
+        {
+            var chest = targetGameObject.GetComponent<Chest>();
+            chest.Open();
+        }
+        else if (targetObjectType == InteractiveObjectType.Door)
+        {
+            //TODO
+        }
+    }
+}

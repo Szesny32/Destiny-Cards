@@ -9,7 +9,7 @@ public class CardInHand
     public CardDescriptor CardDescriptor;
     public GameObject SpawnedObject;
     public Vector3 BasePosition;
-    public Vector3 flowOffset;
+    public Vector3 FlowOffset;
     public float BaseRotation;
 }
 
@@ -37,6 +37,9 @@ public class ActiveCard
 public class PlayerHand : MonoBehaviour
 {
     private readonly List<CardInHand> _cardsInHand = new();
+
+    public List<CardInHand> CardsInHand => _cardsInHand;
+
     private Camera _camera;
 
     private readonly ActiveCard _activeCard = new();
@@ -72,28 +75,17 @@ public class PlayerHand : MonoBehaviour
     private Material _outline;
 
     private MagePlayerController _playerController;
-
+    private CardFactory _cardFactory;
 
     private void Awake(){
+        _cardFactory = new CardFactory(GameManager.Instance.CardTemplatePrefab);
         _playerController = LevelManager.Instance.Player.GetComponent<MagePlayerController>();
         _camera = LevelManager.Instance.MainCamera;
 
-        var pullCard = GameManager.Instance.GetCardDescriptor(CardType.Pull);
-        AddCard(pullCard);
-
-        var fireballCard = GameManager.Instance.GetCardDescriptor(CardType.Fireball);
-        AddCard(fireballCard);
-
-        var resizeUpCard = GameManager.Instance.GetCardDescriptor(CardType.ResizeUp); 
-        AddCard(resizeUpCard);
-
-        var resizeDownCard = GameManager.Instance.GetCardDescriptor(CardType.ResizeDown); 
-        AddCard(resizeDownCard);
-
-        var spectralVisionCard = GameManager.Instance.GetCardDescriptor(CardType.SpectralVision); 
-        AddCard(spectralVisionCard);
-
-
+        foreach (var savedCard in GameManager.Instance.SavedCardsInHand)
+        {
+            AddCard(savedCard);
+        }
     }
 
     private void Update(){
@@ -108,25 +100,13 @@ public class PlayerHand : MonoBehaviour
     }
 
     public void AddCard(CardDescriptor card){
-        var cardInHand = new CardInHand();
-        GameObject spawnedObject = Instantiate(card.Prefab, transform);
-        spawnedObject.transform.localPosition = Vector3.zero;
-
-        cardInHand.CardDescriptor = card;
-        cardInHand.SpawnedObject = spawnedObject;
-
-        cardInHand.flowOffset = new Vector3(  
-            Random.Range(0f, 360f) * Mathf.Deg2Rad,
-            Random.Range(0f, 360f) * Mathf.Deg2Rad,
-            Random.Range(0f, 360f) * Mathf.Deg2Rad
-        );
-
+        var cardInHand = _cardFactory.CreateCardInHand(transform, card);
         _cardsInHand.Add(cardInHand);
         UpdateCardsLayout();
     }
 
     private void UpdateCardsLayout(){
-        float startPosX = -0.5f *cardOffset* (_cardsInHand.Count - 1);
+        float startPosX = -0.5f * cardOffset * (_cardsInHand.Count - 1);
         float posX = startPosX;
         float rotZ = 1.5f * (_cardsInHand.Count - 1);
         for (int i = 0; i < _cardsInHand.Count; i++)
@@ -181,7 +161,7 @@ public class PlayerHand : MonoBehaviour
                 if(newActive){
 
                     Destroy(_activeCard.HoverEffect);
-                    Destroy(_activeCard.FollowEffect);     
+                    Destroy(_activeCard.FollowEffect);
                     
                     
                     var cardDesc = _activeCard.Card.CardDescriptor;
@@ -212,13 +192,12 @@ public class PlayerHand : MonoBehaviour
             }
         }
         else {
-                _activeCard.CurrentState = ActiveCard.State.None;
-                _activeCard.Card = null;
+            _activeCard.CurrentState = ActiveCard.State.None;
+            _activeCard.Card = null;
 
-                Destroy(_activeCard.HoverEffect);
-                Destroy(_activeCard.FollowEffect);     
-                
-            }
+            Destroy(_activeCard.HoverEffect);
+            Destroy(_activeCard.FollowEffect);     
+        }
     }
 
     private void CastSpell(CardInHand card, Transform targetGameObject, InteractiveObjectType targetObjectType){
@@ -316,7 +295,7 @@ public class PlayerHand : MonoBehaviour
     }
 
     private void WaveCard(CardInHand card){
-        Vector3 flow = FlowEffect(_amplitude, card.flowOffset);
+        Vector3 flow = FlowEffect(_amplitude, card.FlowOffset);
         Transform spawnedTransform = card.SpawnedObject.transform;
        
         spawnedTransform.localPosition = Vector3.Slerp(

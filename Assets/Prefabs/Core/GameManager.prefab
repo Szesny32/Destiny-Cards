@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7770968682934123414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7770968682934123412}
+  - component: {fileID: 7770968682934123415}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7770968682934123412
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7770968682934123414}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7288966, y: -20.632416, z: 15.860588}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7770968682934123415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7770968682934123414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25073228bfc519440858dfad66d4310c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardTemplatePrefab: {fileID: 7093610596197637019, guid: 5bcf5fa73fcd39f4b9f6bb5346860658, type: 3}
+  _prefabs:
+  - Id: card_pull
+    Prefab: {fileID: 360041721585030988, guid: d1a34f2b29f4f4d49a6b3911d4b9fb48, type: 3}
+  - Id: card_fireball
+    Prefab: {fileID: 8782672931173387392, guid: fda115a585451fc48bc50596394d2354, type: 3}
+  - Id: card_resize_up
+    Prefab: {fileID: 8782672931173387392, guid: efd14b0a835fd8b489cd692da5863cdf, type: 3}
+  - Id: card_resize_down
+    Prefab: {fileID: 8782672931173387392, guid: 6a80b74f945a3c346a46844a0b00c084, type: 3}
+  - Id: card_spectral_vision
+    Prefab: {fileID: 8782672931173387392, guid: c3dd16670009832419f2ec1cb0168729, type: 3}
+  - Id: effect_greenhit
+    Prefab: {fileID: 6823302871133167919, guid: 3138a83bedbd6ad4481ba0b061da2eb6, type: 3}
+  - Id: effect_holyhit
+    Prefab: {fileID: 2944396702758532163, guid: e190bf97c041e58448af6b043116cba0, type: 3}
+  - Id: effect_portal_blue
+    Prefab: {fileID: 5607819269926399345, guid: 45e0f06c750176947862c10346226439, type: 3}
+  - Id: effect_magic_cricle
+    Prefab: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+  - Id: effect_fire_meteor
+    Prefab: {fileID: 7957833072274404953, guid: 3355f6bfa6db8b24281b827de929694c, type: 3}
+  _textures:
+  - Id: tx_fireball
+    Texture: {fileID: 2800000, guid: f5c9b31e544d1d04686831644237a140, type: 3}
+  - Id: tx_resize_down
+    Texture: {fileID: 2800000, guid: 20cbaa7291fcfff47bf2bca0278b3d2d, type: 3}
+  - Id: tx_resize_up
+    Texture: {fileID: 2800000, guid: 400713f5368ed8a4e8fd641794e25ba2, type: 3}
+  - Id: tx_spectral_vision
+    Texture: {fileID: 2800000, guid: a3acab8be409c6f4c81365c2f9f6f3c8, type: 3}
+  - Id: tx_pull
+    Texture: {fileID: 2800000, guid: 9c0f214ff7c5bf74591d5acfe25bc244, type: 3}
+  _levelSceneNames:
+  - Level_1
+  - Level_2
+  - LevelScene

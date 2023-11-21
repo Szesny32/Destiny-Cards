@@ -9,6 +9,7 @@ public enum InteractiveObjectType
     Door,
     Barrel,
     Player,
+    Torch,
     None,
 }
 
