@@ -97,6 +97,14 @@ public class GameManager : MonoBehaviour
         PrepareCardDescriptors();
     }
 
+    public void Update(){
+        if(Input.GetKeyUp(KeyCode.F6)){
+            NewGame();
+        } else if(Input.GetKeyUp(KeyCode.F5)){
+            QuickLoad();
+        }
+    }
+
     public void NextLevel()
     {
         _currentLevelIndex++;
@@ -112,6 +120,27 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadSceneAsync(sceneName);
         }
     }
+
+    public void NewGame(){
+       
+        if (_currentLevelIndex < _levelSceneNames.Length)
+        {
+            _savedCardsInHand = new List<CardDescriptor>();
+            _currentLevelIndex = 0;
+            string sceneName = _levelSceneNames[_currentLevelIndex];
+            sceneName = _levelSceneNames[_currentLevelIndex];
+            SceneManager.LoadScene(sceneName);
+        }
+    }
+
+    public void QuickLoad(){
+        if (_currentLevelIndex < _levelSceneNames.Length)
+        {
+            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(currentSceneIndex);
+        }
+    }
+
 
     private void PrepareCardDescriptors()
     {
