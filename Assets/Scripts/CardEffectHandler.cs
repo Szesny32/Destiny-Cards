@@ -98,7 +98,8 @@ public class OpenEffectHandler : CardEffectHandler
         }
         else if (targetObjectType == InteractiveObjectType.Door)
         {
-            //TODO
+            var door = targetGameObject.GetComponent<Door>();
+            door.Open();
         }
     }
 }

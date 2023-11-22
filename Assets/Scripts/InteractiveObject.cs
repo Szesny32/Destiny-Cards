@@ -49,8 +49,6 @@ public class InteractiveObject : MonoBehaviour
 
 
     public void Update(){
-        if(spectralVisionElapsed > 0f)
-            Debug.Log(spectralVisionElapsed);
         displayAllTargets = Input.GetKey(KeyCode.LeftAlt);
 
         HandleHighlightState();

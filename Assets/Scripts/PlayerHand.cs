@@ -154,6 +154,10 @@ public class PlayerHand : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 100.0f)){
             if (hit.collider.gameObject.CompareTag("Card")){
                 int cardIndex = int.Parse(hit.collider.gameObject.name);
+                if (cardIndex >= _cardsInHand.Count)
+                {
+                    return;
+                }    
 
                 bool newActive = _activeCard.Card == null  || _activeCard.Card != _cardsInHand[cardIndex];
                 _activeCard.Card = _cardsInHand[cardIndex];
@@ -214,15 +218,13 @@ public class PlayerHand : MonoBehaviour
         Destroy(card.SpawnedObject, 0.125f);
     }
     private void ConsumeCard(){
-   
         _activeCard.CurrentState = ActiveCard.State.None;
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         if(_activeCard.Card.CardDescriptor.Category == CardCategory.World){
             CastSpell(_activeCard.Card, null, InteractiveObjectType.None);
         }
-        else if (Physics.Raycast(ray, out RaycastHit hit, 100.0f)) {
+        else if (Physics.Raycast(ray, out RaycastHit hit, 100.0f, ~LayerMask.GetMask("Cards"))) {
             if (hit.transform.TryGetComponent<InteractiveObject>(out var interactiveObject)) {
-                var cardDesc = _activeCard.Card.CardDescriptor;
                 CastSpell(_activeCard.Card, hit.transform, interactiveObject.Type);
             }
             else {
